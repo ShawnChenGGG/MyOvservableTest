@@ -2,19 +2,15 @@ package com.mxth.myovservabletest;
 
 import android.app.ProgressDialog;
 import android.graphics.BitmapFactory;
-import android.os.SystemClock;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
-import rx.Scheduler;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
-
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,27 +27,29 @@ public class MainActivity extends AppCompatActivity {
         pd = new ProgressDialog(this);
         pd.setMessage("玩儿命加载中...");
     }
-    public void downLoad(View v){
+
+    public void downLoad(View v) {
         pd.show();
-        util.downLoadImg().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<byte[]>() {
+        util.downLoadImg().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<byte[]>() {
             @Override
             public void onCompleted() {
-                if(pd!=null){
+                if (pd != null) {
                     pd.dismiss();
                 }
             }
 
             @Override
             public void onError(Throwable e) {
-                Log.e("message",e.toString());
-                if(pd!=null){
-                pd.dismiss();
+                Log.e("message", e.toString());
+                if (pd != null) {
+                    pd.dismiss();
                 }
             }
 
             @Override
             public void onNext(byte[] o) {
-                imageView.setImageBitmap(BitmapFactory.decodeByteArray(o,0,o.length));
+                imageView.setImageBitmap(BitmapFactory.decodeByteArray(o, 0, o.length));
             }
         });
     }
